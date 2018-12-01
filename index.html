@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <head>
+        <title>Trello</title>
+        <link rel="stylesheet" href="css/trello.css">
+    </head>
+
+    <body>
+        <template id="board-template">
+            <style>
+                .board {
+                    width: intrinsic;           /* Safari/WebKit uses a non-standard name */
+                    width: -moz-max-content;    /* Firefox/Gecko */
+                    width: -webkit-max-content; /* Chrome */
+                    height: 100%;			
+                }
+                .board > .addCardContainerIcon {
+                    float: right;
+                    font-size: 0.8vw;
+                    color: white;
+                    text-shadow: #000 0 1px;
+                    background-color: #3498db;					
+                    border: 0.2vw solid #89c4f4;
+                    border-radius: 4px;
+                    margin-top: 5px;
+                    padding: 2px 6px 2px 6px;
+                    cursor: pointer;
+                    transition: 0.5s;
+                }
+                .addCardContainerIcon:hover {
+                    background-color: #6bb9f0;
+                    color: black;
+                }
+            </style>
+            <div class="board">
+            <div class="addCardContainerIcon">+ Add Column</div>
+            </div>
+        </template>
+
+        <!-- card container template -->
+        <template id="card-container-template">
+            <style>
+                .cardContainer {
+                    position: 'relative';
+                    width: 100%;
+                    height: 600px;
+                    background-color: #c5eff7;
+                    border: 1px solid #81cfe0; 				
+                    -webkit-border-radius: 10px;
+                    -ms-border-radius: 10px;
+                    -moz-border-radius: 10px;
+                    border-radius: 10px;
+                    z-index: 2;
+                }
+                .cardContainer > .cardContainerTitle {
+                    color: black;
+                    font-size: 1vw;
+                    margin: 0px 0 5px 0;
+                    padding: 2px 6px 2px 6px;	
+                }
+                .cardContainer > .cardContainerSaveIcon {
+                    float: right;
+                    display: none;
+                    font-size: 0.6vw;
+                    font-weight: bold;
+                    color: black;
+                    background-color: #89c4f4; 
+                    cursor: pointer;
+                    margin: 5px 0 5px 0;
+                    padding: 2px 6px 2px 6px;
+                    -webkit-border-radius: 10px;
+                    -moz-border-radius: 10px;
+                    -ms-border-radius: 10px;
+                    border-radius: 10px;
+                    -webkit-box-shadow: inset 0 0 3px #000;
+                    -ms-box-shadow: inset 0 0 3px #000;
+                    box-shadow: inset 0 0 3px #000;
+                }
+                .cardContainer > .cardContainerSaveModifyIcon {
+                    float: right;
+                    display: none;
+                    font-size: 0.6vw;
+                    font-weight: bold;
+                    color: black;
+                    background-color: #89c4f4; 
+                    cursor: pointer;
+                    margin: 5px 0 5px 0;
+                    padding: 2px 6px 2px 6px;
+                    -webkit-border-radius: 10px;
+                    -moz-border-radius: 10px;
+                    -ms-border-radius: 10px;
+                    border-radius: 10px;
+                    -webkit-box-shadow: inset 0 0 3px #000;
+                    -ms-box-shadow: inset 0 0 3px #000;
+                    box-shadow: inset 0 0 3px #000;
+                }
+                .cardContainer > .cardContainerCancelIcon {
+                    float: right;
+                    display: none;
+                    font-size: 0.6vw;
+                    font-weight: bold;
+                    color: black;
+                    background-color: #89c4f4; 
+                    cursor: pointer;
+                    margin: 5px 0 5px 0;
+                    padding: 2px 6px 2px 6px;
+                    -webkit-border-radius: 10px;
+                    -moz-border-radius: 10px;
+                    -ms-border-radius: 10px;
+                    border-radius: 10px;
+                    -webkit-box-shadow: inset 0 0 3px #000;
+                    -ms-box-shadow: inset 0 0 3px #000;
+                    box-shadow: inset 0 0 3px #000;
+                }
+                .cardContainer > .cardContainerDeleteIcon {
+                    float: right;
+                    font-size: 1vw;
+                    color: black;
+                    text-shadow: #000 0 1px;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+                .addCardIcon {
+                    float: right;
+                    display: block;
+                    font-size: 0.8vw;
+                    color: white;
+                    text-shadow: #000 0 1px;
+                    background-color: #3498db;					
+                    border: 0.2vw solid #89c4f4;
+                    border-radius: 4px;
+                    margin-top: 5px;
+                    padding: 2px 6px 2px 6px;
+                    cursor: pointer;
+                    transition: 0.5s;
+                }
+                .addCardIcon:hover {
+                    background-color: #6bb9f0;
+                    color: black;
+                }
+            </style>
+
+            <div class="cardContainer">
+                <div class="cardContainerDeleteIcon">&nbsp;x&nbsp;</div>
+                <div class="cardContainerCancelIcon">&nbsp;Cancel&nbsp;</div>
+                <div class="cardContainerSaveModifyIcon">&nbsp;Save Modification&nbsp;</div>
+                <div class="cardContainerSaveIcon">&nbsp;Save&nbsp;</div>
+                <div class="cardContainerTitle" contenteditable="true">
+                    Enter Title
+                </div>
+            </div>
+            <div class="addCardIcon">+ Add Card</div>
+        </template>
+
+        <!-- card template -->
+        <template id="card-template">
+        <style>		
+            .card {
+                position: 'absolute';
+                width: 100%;
+                height: 100%;
+                background-color: #89c4f4;
+                border: 1px solid #3498db;  		
+                -webkit-border-radius: 10px;
+                -ms-border-radius: 10px;
+                -moz-border-radius: 10px;
+                border-radius: 10px;
+                -webkit-box-shadow: 0 4px 10px 0 #000;
+                -ms-box-shadow: 0 4px 10px 0 #000;
+                box-shadow: 0 4px 10px 0 #000;	
+                cursor: pointer;	
+                z-index: 4;	
+            }	
+            .card > .title {
+                margin: 0px 0 5px 0;
+                padding: 2px 6px 2px 6px;
+                background-color: #6bb9f0; 
+                text-shadow: #000 0 1px;			
+                color: white;
+                font-size: 1vw;
+                -webkit-border-top-left-radius: 10px;
+                -moz-border-radius-topleft: 10px;
+                -ms-border-radius-topleft: 10px;
+                border-top-left-radius: 10px;
+                -webkit-border-top-right-radius: 10px;
+                -ms-border-top-right-radius: 10px;
+                -moz-border-radius-topright: 10px;
+                border-top-right-radius: 10px;
+                -webkit-box-shadow: inset 0 0 3px #000;
+                -ms-box-shadow: inset 0 0 3px #000;
+                box-shadow: inset 0 0 3px #000;
+            }
+            .card > .description {
+                display: block;
+                margin: 5px 0 5px 0;
+                padding: 2px 6px 2px 6px;
+                font-size: 0.8vw;
+            }	
+            .card > .expandIcon {
+                float: right;
+                font-size: 1vw;
+                color: white;
+                text-shadow: #000 0 1px;
+                font-weight: bold;
+            }
+            .card > .deleteIcon {
+                float: right;
+                font-size: 1vw;
+                color: white;
+                text-shadow: #000 0 1px;
+                font-weight: bold;
+            }
+            .card > .action {
+                visibility: hidden;
+            }
+            .card > .action > .saveIcon {
+                float: left;
+                display: none;
+                font-size: 0.8vw;
+                color: white;
+                background-color: #6bb9f0; 
+                text-shadow: #000 0 1px;
+                font-weight: bold;
+                margin: 5px 0 5px 0;
+                padding: 2px 6px 2px 6px;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                -ms-border-radius: 10px;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 3px #000;
+                -ms-box-shadow: inset 0 0 3px #000;
+                box-shadow: inset 0 0 3px #000;
+            }
+            .card > .action > .saveModifyIcon {
+                float: left;
+                display: none;
+                font-size: 0.8vw;
+                color: white;
+                background-color: #6bb9f0; 
+                text-shadow: #000 0 1px;
+                font-weight: bold;
+                margin: 5px 0 5px 0;
+                padding: 2px 6px 2px 6px;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                -ms-border-radius: 10px;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 3px #000;
+                -ms-box-shadow: inset 0 0 3px #000;
+                box-shadow: inset 0 0 3px #000;
+            }
+            .card > .action > .cancelIcon {
+                float: left;
+                display: none;
+                font-size: 0.8vw;
+                color: white;
+                background-color: #6bb9f0; 
+                text-shadow: #000 0 1px;
+                font-weight: bold;
+                margin: 5px 0 5px 0;
+                padding: 2px 6px 2px 6px;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                -ms-border-radius: 10px;
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 3px #000;
+                -ms-box-shadow: inset 0 0 3px #000;
+                box-shadow: inset 0 0 3px #000;
+            }
+        </style>
+
+        <div class="card">
+            <div class="deleteIcon">&nbsp;x&nbsp;</div>
+            <div class="expandIcon">&nbsp;_&nbsp;</div>
+            <div class="title" contenteditable="true">
+                Enter Title		
+            </div>			
+            <div class="description" contenteditable="true">
+                Enter description
+            </div>
+            <div class="action">
+                <div class="saveIcon">&nbsp;Save&nbsp;</div>
+                <div class="saveModifyIcon">&nbsp;Save Modification&nbsp;</div>
+                <div class="cancelIcon">&nbsp;Cancel&nbsp;</div>
+            </div>
+        </div>	
+        </template>
+
+        <script src="js/utils.js"></script>
+        <script src="js/TrelloElements.js"></script>
+        <script src="js/TrelloBoardMgr.js"></script>
+
+        <script>
+            (function() {
+                // initialize and render the board
+                const trelloBoardMgr = new TrelloBoardMgr();
+                trelloBoardMgr.generateBoard();
+            })();
+        </script>  
+
+    </body>  
+</html>
